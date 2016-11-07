@@ -1,0 +1,9 @@
+{{extend 'layout.html'}}
+<style>
+        body{
+        background-image:url("http://previews.123rf.com/images/nexusplexus/nexusplexus1212/nexusplexus121205627/17056576-Illustration-with-medical-background-having-heart-beat-doctor-and-stethoscope-Stock-Illustration.jpg");
+        background-repeat: no-repeat;
+        background-size:100% 150%;
+    }
+</style>
+{{=grid}}

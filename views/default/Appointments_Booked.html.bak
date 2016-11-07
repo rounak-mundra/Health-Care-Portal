@@ -1,0 +1,59 @@
+{{extend 'layout.html'}}
+<h1>Appointments Booked</h1>
+<style>
+        body{
+        background-image:url("http://www.pptclipart.com/download/Medical-capsule-free-ppt-backgrounds.jpg");
+        background-repeat: no-repeat;
+        background-size:100% 140%;
+    }
+                h1{
+        text-transform:capitalize;
+        text-shadow:4px 4px #C4CCC8;
+        text-align:center;
+        font-size:45px;
+            color:black;
+        font-family:"Times New Roman";
+    }
+    h4{
+        text-transform:capitalize;
+        font-size:25px;
+        font-family:"Times New Roman"
+    }
+    th{
+        text-align:center;
+    }
+</style>
+<body>
+    <br>
+    <center>
+<table >
+    
+    <th><h4>Name</h4>      </th>
+    <th><h4>Phone Number </h4>    </th>
+    <th><h4>Email Address</h4>     </th>
+     <th><h4>Appointment Time     </h4> </th>
+{{for row in rows:}}
+    <tr align='center'>
+        <hr>
+     
+        <td>
+            {{=row.Name}}
+        </td>
+        
+        <td>
+            {{=row.Phone}}
+        </td>
+        
+        <td>
+            {{=row.Email}}
+        </td>
+       
+        <td>
+            {{=row.AppointmentTime}}
+        </td>
+    </tr>
+    {{pass}}
+   
+</table>
+ </center>
+    </body>

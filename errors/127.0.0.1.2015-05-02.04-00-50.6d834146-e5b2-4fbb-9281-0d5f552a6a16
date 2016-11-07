@@ -1,0 +1,750 @@
+(dp1
+S'output'
+p2
+S'<class \'sqlite3.OperationalError\'> near "Time": syntax error'
+p3
+sS'layer'
+p4
+S'/home/kushagra/Downloads/web2py/applications/AAROGYA/controllers/default.py'
+p5
+sS'code'
+p6
+S'# -*- coding: utf-8 -*-\n# this file is released under public domain and you can use without limitations\n\n#########################################################################\n## This is a sample controller\n## - index is the default action of any application\n## - user is required for authentication and authorization\n## - download is for downloading files uploaded in the db (does streaming)\n## - api is an example of Hypermedia API support and access control\n#########################################################################\n\ndef index():\n    response.flash=T(\'WELCOME TO IIIT-H HEALTH CENTRE\')\n    x=\'AAROGYA\'\n    return locals()\n\n@auth.requires_login()\ndef Registration_Form():\n    form=SQLFORM(db.Patients).process()\n    if form.accepted:\n        response.flash=\'Form Accepted\'\n    elif form.errors:\n        response.flash=\'Form has errors\'\n    else:\n        response.flash=\'Please fill out the form\'\n    return dict(form=form)\n\n@auth.requires_login()\ndef Appointments_Booked():\n    rows=db(db.Patients.id>0).select()\n    table=SQLTABLE(rows)\n    return locals()\n    \n@auth.requires_login()\ndef edit_task():\n    task_id=request.args(0)\n    task=db.task[task_id] or redirect(error_page)\n    person=db.person[task.person]\n    db.task.person.writable=db.task.person.readable=False\n    form=crud.update(db.task,task,next=\'view_task/[id]\')\n    return dict(form=form, person=person)\n\n@auth.requires_login()\ndef view_task():\n    task_id=request.args(0)\n    task=db.task[task_id] or redirect(error_page)\n    person=db.person[task.person]\n    db.task.person.writable=db.task.person.readable=False\n    form=crud.read(db.task,task)\n    return dict(form=form, person=person, task=task)\n\n@auth.requires_login()\ndef list_tasks():\n    person_id=request.args(0)\n    person=db.person[person_id]\n    if person_id:\n       tasks=db(db.task.person==person_id)\\\n               (db.task.created_by==auth.user.id)\\\n               (db.task.start_time>=request.now).select()\n    else:\n       tasks=db(db.task.created_by==auth.user.id)\\\n               (db.task.start_time<=request.now).select()\n    db.task.person.default=person_id\n    db.task.person.writable=db.task.person.readable=False\n    form=crud.create(db.task,next=\'view_task/[id]\')\n    return dict(tasks=tasks,person=person,form=form)\n\ndef user():\n    """\n    exposes:\n    http://..../[app]/default/user/login\n    http://..../[app]/default/user/logout\n    http://..../[app]/default/user/register\n    http://..../[app]/default/user/profile\n    http://..../[app]/default/user/retrieve_password\n    http://..../[app]/default/user/change_password\n    http://..../[app]/default/user/manage_users (requires membership in\n    use @auth.requires_login()\n        @auth.requires_membership(\'group name\')\n        @auth.requires_permission(\'read\',\'table name\',record_id)\n    to decorate functions that need access control\n    """\n    return dict(form=auth())\n\n\n@cache.action()\ndef download():\n    """\n    allows downloading of uploaded files\n    http://..../[app]/default/download/[filename]\n    """\n    return response.download(request, db)\n\n\ndef call():\n    """\n    exposes services. for example:\n    http://..../[app]/default/call/jsonrpc\n    decorate with @services.jsonrpc the functions to expose\n    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv\n    """\n    return service()\n\n\n@auth.requires_login() \ndef api():\n    """\n    this is example of API with access control\n    WEB2PY provides Hypermedia API (Collection+JSON) Experimental\n    """\n    from gluon.contrib.hypermedia import Collection\n    rules = {\n        \'<tablename>\': {\'GET\':{},\'POST\':{},\'PUT\':{},\'DELETE\':{}},\n        }\n    return Collection(db).process(request,response,rules)\n\nresponse._vars=response._caller(Registration_Form)\n'
+p7
+sS'snapshot'
+p8
+(dp9
+S'exception'
+p10
+(dp11
+S'__module__'
+p12
+S"'sqlite3'"
+p13
+sS'__getslice__'
+p14
+S"<method-wrapper '__getslice__' of OperationalError object>"
+p15
+sS'__str__'
+p16
+S"<method-wrapper '__str__' of OperationalError object>"
+p17
+sS'__reduce__'
+p18
+S'<built-in method __reduce__ of OperationalError object>'
+p19
+sS'__dict__'
+p20
+S'{}'
+p21
+sS'__sizeof__'
+p22
+S'<built-in method __sizeof__ of OperationalError object>'
+p23
+sS'__weakref__'
+p24
+S'None'
+p25
+sS'__init__'
+p26
+S"<method-wrapper '__init__' of OperationalError object>"
+p27
+sS'__setattr__'
+p28
+S"<method-wrapper '__setattr__' of OperationalError object>"
+p29
+sS'__reduce_ex__'
+p30
+S'<built-in method __reduce_ex__ of OperationalError object>'
+p31
+sS'__new__'
+p32
+S'<built-in method __new__ of type object>'
+p33
+sS'__format__'
+p34
+S'<built-in method __format__ of OperationalError object>'
+p35
+sS'__class__'
+p36
+S"<class 'sqlite3.OperationalError'>"
+p37
+sS'__doc__'
+p38
+S'None'
+p39
+sS'__getitem__'
+p40
+S"<method-wrapper '__getitem__' of OperationalError object>"
+p41
+sS'__setstate__'
+p42
+S'<built-in method __setstate__ of OperationalError object>'
+p43
+sS'__getattribute__'
+p44
+S"<method-wrapper '__getattribute__' of OperationalError object>"
+p45
+sS'args'
+p46
+S'(\'near "Time": syntax error\',)'
+p47
+sS'__subclasshook__'
+p48
+S'<built-in method __subclasshook__ of type object>'
+p49
+sS'__unicode__'
+p50
+S'<built-in method __unicode__ of OperationalError object>'
+p51
+sS'__delattr__'
+p52
+S"<method-wrapper '__delattr__' of OperationalError object>"
+p53
+sS'__repr__'
+p54
+S"<method-wrapper '__repr__' of OperationalError object>"
+p55
+sS'__hash__'
+p56
+S"<method-wrapper '__hash__' of OperationalError object>"
+p57
+ssS'evalue'
+p58
+S'near "Time": syntax error'
+p59
+sS'request'
+p60
+cgluon.html
+XML_unpickle
+p61
+(S'shm\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">ajax</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">application</td><td style="vertical-align:top;">:</td><td><div>AAROGYA</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cid</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">client</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">controller</td><td style="vertical-align:top;">:</td><td><div>default</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cookies</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">session_id_aarogya</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-ac4dc907-8098-4f0d-947b-05fcac0b5ffa<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_admin</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-f3c137d3-f852-49aa-9120-97f874cf72cb<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_appointment_manger</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-64afe065-19b5-4f74-8dbf-86503d3bccfd<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_customers</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-bf39c42d-3e39-47e2-992e-634afdbb0b4b<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_welcome</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-5fe2fdf6-e6e5-472e-8ec5-584b707b6d64<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">env</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">CONTENT_LENGTH</td><td style="vertical-align:top;">:</td><td><div>1175</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">CONTENT_TYPE</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=---------------------------1375901811662495817150031558</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT</td><td style="vertical-align:top;">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT_ENCODING</td><td style="vertical-align:top;">:</td><td><div>gzip, deflate</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT_LANGUAGE</td><td style="vertical-align:top;">:</td><td><div>en-US,en;q=0.5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CONNECTION</td><td style="vertical-align:top;">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CONTENT_LENGTH</td><td style="vertical-align:top;">:</td><td><div>1175</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CONTENT_TYPE</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=---------------------------1375901811662495817150031558</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_COOKIE</td><td style="vertical-align:top;">:</td><td><div>session_id_welcome=127.0.0.1-5fe2fdf6-e6e5-472e-8ec5-584b707b6d64; session_id_admin=127.0.0.1-f3c137d3-f852-49aa-9120-97f874cf72cb; session_id_aarogya=127.0.0.1-ac4dc907-8098-4f0d-947b-05fcac0b5ffa; session_id_appointment_manger=127.0.0.1-64afe065-19b5-4f74-8dbf-86503d3bccfd; session_id_customers=127.0.0.1-bf39c42d-3e39-47e2-992e-634afdbb0b4b</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_HOST</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_REFERER</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000/AAROGYA/default/Registration_Form</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_USER_AGENT</td><td style="vertical-align:top;">:</td><td><div>Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:37.0) Gecko/20100101 Firefox/37.0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">PATH_INFO</td><td style="vertical-align:top;">:</td><td><div>/AAROGYA/default/Registration_Form</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">QUERY_STRING</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REMOTE_ADDR</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REMOTE_PORT</td><td style="vertical-align:top;">:</td><td><div>52317</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REQUEST_METHOD</td><td style="vertical-align:top;">:</td><td><div>POST</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SCRIPT_NAME</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_NAME</td><td style="vertical-align:top;">:</td><td><div>kushagra-Inspiron-3542</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_PORT</td><td style="vertical-align:top;">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_PROTOCOL</td><td style="vertical-align:top;">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_SOFTWARE</td><td style="vertical-align:top;">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">app_folders</td><td style="vertical-align:top;">:</td><td><div>set([&#x27;/home/kushagra/Downloads/web2py/applications/customers/&#x27;, &#x27;/home/kushagra/Downloads/web2py/applications/AAROGYA/&#x27;, &#x27;/home/kushagra/Downloads/web2py/applications/admin/&#x27;, &#x27;/home/kushagra/Downloads/web2py/applications/welcome/&#x27;, &#x27;/home/kushagra/Downloads/web2py/applications/appointment_manger/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">applications_parent</td><td style="vertical-align:top;">:</td><td><div>/home/kushagra/Downloads/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_options</td><td style="vertical-align:top;">:</td><td><div>&lt;Values at 0x7fcc4ee69710: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;with_scheduler&#x27;: False, &#x27;ips&#x27;: [&#x27;127.0.1.1&#x27;], &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;scheduler_groups&#x27;: None, &#x27;port&#x27;: 8000, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;kushagra-Inspiron-3542&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: False, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/home/kushagra/Downloads/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;profiler_dir&#x27;: None, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;interfaces&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;gae&#x27;: None, &#x27;password&#x27;: &#x27;&lt;ask&gt;&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">content_length</td><td style="vertical-align:top;">:</td><td><div>1175</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">content_type</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=---------------------------1375901811662495817150031558</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">db_sessions</td><td style="vertical-align:top;">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">debugging</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">gluon_parent</td><td style="vertical-align:top;">:</td><td><div>/home/kushagra/Downloads/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept</td><td style="vertical-align:top;">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept_encoding</td><td style="vertical-align:top;">:</td><td><div>gzip, deflate</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept_language</td><td style="vertical-align:top;">:</td><td><div>en-US,en;q=0.5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_connection</td><td style="vertical-align:top;">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_content_length</td><td style="vertical-align:top;">:</td><td><div>1175</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_content_type</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=---------------------------1375901811662495817150031558</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_cookie</td><td style="vertical-align:top;">:</td><td><div>session_id_welcome=127.0.0.1-5fe2fdf6-e6e5-472e-8ec5-584b707b6d64; session_id_admin=127.0.0.1-f3c137d3-f852-49aa-9120-97f874cf72cb; session_id_aarogya=127.0.0.1-ac4dc907-8098-4f0d-947b-05fcac0b5ffa; session_id_appointment_manger=127.0.0.1-64afe065-19b5-4f74-8dbf-86503d3bccfd; session_id_customers=127.0.0.1-bf39c42d-3e39-47e2-992e-634afdbb0b4b</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_host</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_referer</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000/AAROGYA/default/Registration_Form</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_user_agent</td><td style="vertical-align:top;">:</td><td><div>Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:37.0) Gecko/20100101 Firefox/37.0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_jython</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_pypy</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_source</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">local_hosts</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>kushagra-Inspiron-3542</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path_info</td><td style="vertical-align:top;">:</td><td><div>/AAROGYA/default/Registration_Form</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">query_string</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remote_addr</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remote_port</td><td style="vertical-align:top;">:</td><td><div>52317</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">request_method</td><td style="vertical-align:top;">:</td><td><div>POST</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">request_uri</td><td style="vertical-align:top;">:</td><td><div>/AAROGYA/default/Registration_Form</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">script_name</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_name</td><td style="vertical-align:top;">:</td><td><div>kushagra-Inspiron-3542</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_port</td><td style="vertical-align:top;">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_protocol</td><td style="vertical-align:top;">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_software</td><td style="vertical-align:top;">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_path</td><td style="vertical-align:top;">:</td><td><div>/home/kushagra/Downloads/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_version</td><td style="vertical-align:top;">:</td><td><div>2.9.12-stable+timestamp.2015.01.17.06.11.03</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.errors</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7fcc5314a1e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.file_wrapper</td><td style="vertical-align:top;">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x7fcc4f987c80&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.input</td><td style="vertical-align:top;">:</td><td><div>&lt;socket._fileobject object at 0x7fcc12397c50&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.multiprocess</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.multithread</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.run_once</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.url_scheme</td><td style="vertical-align:top;">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.version</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_errors</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7fcc5314a1e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_file_wrapper</td><td style="vertical-align:top;">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x7fcc4f987c80&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_input</td><td style="vertical-align:top;">:</td><td><div>&lt;socket._fileobject object at 0x7fcc12397c50&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_multiprocess</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_multithread</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_run_once</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_url_scheme</td><td style="vertical-align:top;">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_version</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">extension</td><td style="vertical-align:top;">:</td><td><div>html</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">folder</td><td style="vertical-align:top;">:</td><td><div>/home/kushagra/Downloads/web2py/applications/AAROGYA/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">function</td><td style="vertical-align:top;">:</td><td><div>Registration_Form</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">global_settings</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">app_folders</td><td style="vertical-align:top;">:</td><td><div>set([&#x27;/home/kushagra/Downloads/web2py/applications/customers/&#x27;, &#x27;/home/kushagra/Downloads/web2py/applications/AAROGYA/&#x27;, &#x27;/home/kushagra/Downloads/web2py/applications/admin/&#x27;, &#x27;/home/kushagra/Downloads/web2py/applications/welcome/&#x27;, &#x27;/home/kushagra/Downloads/web2py/applications/appointment_manger/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">applications_parent</td><td style="vertical-align:top;">:</td><td><div>/home/kushagra/Downloads/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_options</td><td style="vertical-align:top;">:</td><td><div>&lt;Values at 0x7fcc4ee69710: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;with_scheduler&#x27;: False, &#x27;ips&#x27;: [&#x27;127.0.1.1&#x27;], &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;scheduler_groups&#x27;: None, &#x27;port&#x27;: 8000, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;kushagra-Inspiron-3542&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: False, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/home/kushagra/Downloads/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;profiler_dir&#x27;: None, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;interfaces&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;gae&#x27;: None, &#x27;password&#x27;: &#x27;&lt;ask&gt;&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">db_sessions</td><td style="vertical-align:top;">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">debugging</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">gluon_parent</td><td style="vertical-align:top;">:</td><td><div>/home/kushagra/Downloads/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_jython</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_pypy</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_source</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">local_hosts</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>kushagra-Inspiron-3542</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_version</td><td style="vertical-align:top;">:</td><td><div>2.9.12-stable+timestamp.2015.01.17.06.11.03</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_https</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_local</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_restful</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_sheduler</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_shell</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">now</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2015, 5, 2, 4, 0, 50, 996385)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">raw_args</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">raw_extension</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">url</td><td style="vertical-align:top;">:</td><td><div>/AAROGYA/default/Registration_Form</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">utcnow</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2015, 5, 1, 22, 30, 50, 996402)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">uuid</td><td style="vertical-align:top;">:</td><td><div>AAROGYA/127.0.0.1.2015-05-02.04-00-50.6d834146-e5b2-4fbb-9281-0d5f552a6a16</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi</td><td style="vertical-align:top;">:</td><td><div>&lt;gluon.main.LazyWSGI object at 0x7fcc11bc5950&gt;</div></td></tr></table></div>'
+tRp62
+sS'frames'
+p63
+(lp64
+(dp65
+S'file'
+p66
+S'/home/kushagra/Downloads/web2py/gluon/restricted.py'
+p67
+sS'dump'
+p68
+(dp69
+S'environment'
+p70
+S"{'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'ASSIGNJS': <function ASSIGNJS>, 'Appointments_Booked': <function Appointments_Booked>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, ...}"
+p71
+sS'ccode'
+p72
+S'<code object <module> at 0x7fcc12f0bdb0, file "/...cations/AAROGYA/controllers/default.py", line 12>'
+p73
+ssS'lnum'
+p74
+I224
+sS'lines'
+p75
+(dp76
+I224
+S'        exec ccode in environment'
+p77
+sI225
+S'    except HTTP:'
+p78
+sI226
+S'        raise'
+p79
+sI227
+S'    except RestrictedError:'
+p80
+sI228
+S'        # do not encapsulate (obfuscate) the original RestrictedError'
+p81
+sI219
+S'    try:'
+p82
+sI220
+S'        if isinstance(code, types.CodeType):'
+p83
+sI221
+S'            ccode = code'
+p84
+sI222
+S'        else:'
+p85
+sI223
+S'            ccode = compile2(code, layer)'
+p86
+ssS'call'
+p87
+S"(code='# -*- coding: utf-8 -*-\\n# this file is released ...sponse._vars=response._caller(Registration_Form)\\n', environment={'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'ASSIGNJS': <function ASSIGNJS>, 'Appointments_Booked': <function Appointments_Booked>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, ...}, layer='/home/kushagra/Downloads/web2py/applications/AAROGYA/controllers/default.py')"
+p88
+sS'func'
+p89
+S'restricted'
+p90
+sa(dp91
+g66
+S'/home/kushagra/Downloads/web2py/applications/AAROGYA/controllers/default.py'
+p92
+sg68
+(dp93
+sg74
+I117
+sg75
+(dp94
+I106
+S'def api():'
+p95
+sI107
+S'    """'
+p96
+sI108
+S'    this is example of API with access control'
+p97
+sI109
+S'    WEB2PY provides Hypermedia API (Collection+JSON) Experimental'
+p98
+sI110
+S'    """'
+p99
+sI111
+S'    from gluon.contrib.hypermedia import Collection'
+p100
+sI112
+S'    rules = {'
+p101
+sI113
+S"        '<tablename>': {'GET':{},'POST':{},'PUT':{},'DELETE':{}},"
+p102
+sI114
+S'        }'
+p103
+sI115
+S'    return Collection(db).process(request,response,rules)'
+p104
+ssg87
+S'()'
+p105
+sg89
+S'<module>'
+p106
+sa(dp107
+g66
+S'/home/kushagra/Downloads/web2py/gluon/globals.py'
+p108
+sg68
+(dp109
+S'self'
+p110
+S'undefined'
+p111
+sS'f'
+S'<function Registration_Form>'
+p112
+ssg74
+I393
+sg75
+(dp113
+I388
+S"        self.flash = ''            # used by the default view layout"
+p114
+sI389
+S'        self.meta = Storage()      # used by web2py_ajax.html'
+p115
+sI390
+S'        self.menu = []             # used by the default view layout'
+p116
+sI391
+S'        self.files = []            # used by web2py_ajax.html'
+p117
+sI392
+S'        self._vars = None'
+p118
+sI393
+S'        self._caller = lambda f: f()'
+p119
+sI394
+S'        self._view_environment = None'
+p120
+sI395
+S'        self._custom_commit = None'
+p121
+sI396
+S'        self._custom_rollback = None'
+p122
+sI397
+S"        self.generic_patterns = ['*']"
+p123
+ssg87
+S'(f=<function Registration_Form>)'
+p124
+sg89
+S'<lambda>'
+p125
+sa(dp126
+g66
+S'/home/kushagra/Downloads/web2py/gluon/tools.py'
+p127
+sg68
+(dp128
+S'action'
+p129
+S'<function Registration_Form>'
+p130
+sS'a'
+S'()'
+p131
+sS'b'
+g21
+ssg74
+I3444
+sg75
+(dp132
+I3439
+S'                    flag = condition'
+p133
+sI3440
+S'                if not flag:'
+p134
+sI3441
+S'                    current.session.flash = self.messages.access_denied'
+p135
+sI3442
+S'                    return call_or_redirect('
+p136
+sI3443
+S'                        self.settings.on_failed_authorization)'
+p137
+sI3444
+S'                return action(*a, **b)'
+p138
+sI3445
+S'            f.__doc__ = action.__doc__'
+p139
+sI3446
+S'            f.__name__ = action.__name__'
+p140
+sI3447
+S'            f.__dict__.update(action.__dict__)'
+p141
+sI3448
+S'            return f'
+p142
+ssg87
+S'(*a=(), **b={})'
+p143
+sg89
+S'f'
+sa(dp144
+g66
+S'/home/kushagra/Downloads/web2py/applications/AAROGYA/controllers/default.py'
+p145
+sg68
+(dp146
+S'global db'
+p147
+S'<DAL uri="sqlite://storage.sqlite">'
+p148
+sS'global SQLFORM'
+p149
+S"<class 'gluon.sqlhtml.SQLFORM'>"
+p150
+sS'db.Patients'
+p151
+S'<Table Patients (id,Name,Phone,Ailment,Symptoms,Email,RegDate,Appointment Time)>'
+p152
+sS'form'
+p153
+g111
+sS').process'
+p154
+g111
+ssg74
+I19
+sg75
+(dp155
+I14
+S"    x='AAROGYA'"
+p156
+sI15
+S'    return locals()'
+p157
+sI16
+S''
+sI17
+S'@auth.requires_login()'
+p158
+sI18
+S'def Registration_Form():'
+p159
+sI19
+S'    form=SQLFORM(db.Patients).process()'
+p160
+sI20
+S'    if form.accepted:'
+p161
+sI21
+S"        response.flash='Form Accepted'"
+p162
+sI22
+S'    elif form.errors:'
+p163
+sI23
+S"        response.flash='Form has errors'"
+p164
+ssg87
+S'()'
+p165
+sg89
+S'Registration_Form'
+p166
+sa(dp167
+g66
+S'/home/kushagra/Downloads/web2py/gluon/html.py'
+p168
+sg68
+(dp169
+S'self'
+p170
+S'<gluon.sqlhtml.SQLFORM object>'
+p171
+sS'self.validate'
+p172
+S'<bound method SQLFORM.validate of <gluon.sqlhtml.SQLFORM object>>'
+p173
+sS'kwargs'
+p174
+S"{'dbio': True}"
+p175
+ssg74
+I2303
+sg75
+(dp176
+I2304
+S'        return self'
+p177
+sI2305
+S''
+sI2306
+S'    REDIRECT_JS = "window.location=\'%s\';return false"'
+p178
+sI2307
+S''
+sI2298
+S''
+sI2299
+S''
+sI2300
+S'        """'
+p179
+sI2301
+S"        kwargs['dbio'] = kwargs.get('dbio', True)"
+p180
+sI2302
+S'                                    # necessary for SQLHTML forms'
+p181
+sI2303
+S'        self.validate(**kwargs)'
+p182
+ssg87
+S"(self=<gluon.sqlhtml.SQLFORM object>, **kwargs={'dbio': True})"
+p183
+sg89
+S'process'
+p184
+sa(dp185
+g66
+S'/home/kushagra/Downloads/web2py/gluon/html.py'
+p186
+sg68
+(dp187
+S'self'
+p188
+S'<gluon.sqlhtml.SQLFORM object>'
+p189
+sS'self.accepts'
+p190
+S'<bound method SQLFORM.accepts of <gluon.sqlhtml.SQLFORM object>>'
+p191
+sS'kwargs'
+p192
+S"{'dbio': True, 'request_vars': <Storage {'Appointment Time': '04:00:46', 'Name'...ormname': 'Patients/create', 'Ailment': 'Cough'}>, 'session': <Storage {'_formkey[Patients/create]': ['aa3aac3...86339', '8662ff4e-0923-4ef0-9703-df14d033eb14']}>}"
+p193
+ssg74
+I2240
+sg75
+(dp194
+I2240
+S'        if self.accepts(**kwargs):'
+p195
+sI2241
+S"            if onsuccess == 'flash':"
+p196
+sI2242
+S'                if next:'
+p197
+sI2243
+S'                    current.session.flash = message_onsuccess'
+p198
+sI2244
+S'                else:'
+p199
+sI2235
+S"        for key in ('message_onsuccess', 'message_onfailure', 'onsuccess',"
+p200
+sI2236
+S"                    'onfailure', 'next', 'message_onchange', 'onchange'):"
+p201
+sI2237
+S'            if key in kwargs:'
+p202
+sI2238
+S'                del kwargs[key]'
+p203
+sI2239
+S''
+ssg87
+S"(self=<gluon.sqlhtml.SQLFORM object>, **kwargs={'dbio': True, 'request_vars': <Storage {'Appointment Time': '04:00:46', 'Name'...ormname': 'Patients/create', 'Ailment': 'Cough'}>, 'session': <Storage {'_formkey[Patients/create]': ['aa3aac3...86339', '8662ff4e-0923-4ef0-9703-df14d033eb14']}>})"
+p204
+sg89
+S'validate'
+p205
+sa(dp206
+g66
+S'/home/kushagra/Downloads/web2py/gluon/sqlhtml.py'
+p207
+sg68
+(dp208
+S'self.vars.id'
+p209
+S'None'
+p210
+sS'fields'
+p211
+S"{'Ailment': 'Cough', 'Appointment Time': datetime.time(4, 0, 46), 'Email': 'abc@gmail.com', 'Name': 'abc', 'Phone': '999999999', 'RegDate': datetime.date(2015, 5, 2), 'Symptoms': 'Runny Nose'}"
+p212
+sS'self'
+p213
+S'<gluon.sqlhtml.SQLFORM object>'
+p214
+sS'self.vars'
+p215
+S"<Storage {'Appointment Time': datetime.time(4, 0...', 'Email': 'abc@gmail.com', 'Ailment': 'Cough'}>"
+p216
+sS'self.table.insert'
+p217
+S'<bound method Table.insert of <Table Patients (i...ilment,Symptoms,Email,RegDate,Appointment Time)>>'
+p218
+sS'self.table'
+p219
+S'<Table Patients (id,Name,Phone,Ailment,Symptoms,Email,RegDate,Appointment Time)>'
+p220
+ssg74
+I1677
+sg75
+(dp221
+I1672
+S'                    self.vars.id = self.record[self.id_field_name]'
+p222
+sI1673
+S'                    if fields:'
+p223
+sI1674
+S'                        self.table._db(self.table._id == self.record['
+p224
+sI1675
+S'                                       self.id_field_name]).update(**fields)'
+p225
+sI1676
+S'                else:'
+p226
+sI1677
+S'                    self.vars.id = self.table.insert(**fields)'
+p227
+sI1678
+S'        self.accepted = ret'
+p228
+sI1679
+S'        return ret'
+p229
+sI1680
+S''
+sI1681
+S'    AUTOTYPES = {'
+p230
+ssg87
+S"(self=<gluon.sqlhtml.SQLFORM object>, request_vars=<Storage {'Appointment Time': '04:00:46', 'Name'...ormname': 'Patients/create', 'Ailment': 'Cough'}>, session=<Storage {'_formkey[Patients/create]': ['aa3aac3...86339', '8662ff4e-0923-4ef0-9703-df14d033eb14']}>, formname='Patients/create', keepvalues=False, onvalidation=None, dbio=True, hideerror=False, detect_record_change=False, **kwargs={})"
+p231
+sg89
+S'accepts'
+p232
+sa(dp233
+g66
+S'/home/kushagra/Downloads/web2py/gluon/dal/objects.py'
+p234
+sg68
+(dp235
+S'self._listify'
+p236
+S'<bound method Table._listify of <Table Patients ...ilment,Symptoms,Email,RegDate,Appointment Time)>>'
+p237
+sS'fields'
+p238
+S"{'Ailment': 'Cough', 'Appointment Time': datetime.time(4, 0, 46), 'Email': 'abc@gmail.com', 'Name': 'abc', 'Phone': '999999999', 'RegDate': datetime.date(2015, 5, 2), 'Symptoms': 'Runny Nose'}"
+p239
+sS'self'
+p240
+S'<Table Patients (id,Name,Phone,Ailment,Symptoms,Email,RegDate,Appointment Time)>'
+p241
+sS'ret'
+p242
+g111
+sS'self._db._adapter'
+p243
+S'<gluon.dal.adapters.sqlite.SQLiteAdapter object>'
+p244
+sS'self._db._adapter.insert'
+p245
+S'<bound method SQLiteAdapter.insert of <gluon.dal.adapters.sqlite.SQLiteAdapter object>>'
+p246
+sS'self._db'
+p247
+S'<DAL uri="sqlite://storage.sqlite">'
+p248
+ssg74
+I724
+sg75
+(dp249
+I719
+S''
+sI720
+S'    def insert(self, **fields):'
+p250
+sI721
+S'        fields = self._defaults(fields)'
+p251
+sI722
+S'        self._attempt_upload(fields)'
+p252
+sI723
+S'        if any(f(fields) for f in self._before_insert): return 0'
+p253
+sI724
+S'        ret =  self._db._adapter.insert(self, self._listify(fields))'
+p254
+sI725
+S'        if ret and self._after_insert:'
+p255
+sI726
+S'            fields = Row(fields)'
+p256
+sI727
+S'            [f(fields,ret) for f in self._after_insert]'
+p257
+sI728
+S'        return ret'
+p258
+ssg87
+S"(self=<Table Patients (id,Name,Phone,Ailment,Symptoms,Email,RegDate,Appointment Time)>, **fields={'Ailment': 'Cough', 'Appointment Time': datetime.time(4, 0, 46), 'Email': 'abc@gmail.com', 'Name': 'abc', 'Phone': '999999999', 'RegDate': datetime.date(2015, 5, 2), 'Symptoms': 'Runny Nose'})"
+p259
+sg89
+S'insert'
+p260
+sa(dp261
+g66
+S'/home/kushagra/Downloads/web2py/gluon/dal/adapters/base.py'
+p262
+sg68
+(dp263
+S'e'
+S'OperationalError(\'near "Time": syntax error\',)'
+p264
+ssg74
+I715
+sg75
+(dp265
+I710
+S'            self.execute(query)'
+p266
+sI711
+S'        except Exception:'
+p267
+sI712
+S'            e = sys.exc_info()[1]'
+p268
+sI713
+S"            if hasattr(table,'_on_insert_error'):"
+p269
+sI714
+S'                return table._on_insert_error(table,fields,e)'
+p270
+sI715
+S'            raise e'
+p271
+sI716
+S"        if hasattr(table, '_primarykey'):"
+p272
+sI717
+S'            mydict = dict([(k[0].name, k[1]) for k in fields if k[0].name in table._primarykey])'
+p273
+sI718
+S'            if mydict != {}:'
+p274
+sI719
+S'                return mydict'
+p275
+ssg87
+S"(self=<gluon.dal.adapters.sqlite.SQLiteAdapter object>, table=<Table Patients (id,Name,Phone,Ailment,Symptoms,Email,RegDate,Appointment Time)>, fields=[(<gluon.dal.objects.Field object>, datetime.time(4, 0, 46)), (<gluon.dal.objects.Field object>, 'abc'), (<gluon.dal.objects.Field object>, datetime.date(2015, 5, 2)), (<gluon.dal.objects.Field object>, 'Runny Nose'), (<gluon.dal.objects.Field object>, '999999999'), (<gluon.dal.objects.Field object>, 'abc@gmail.com'), (<gluon.dal.objects.Field object>, 'Cough')])"
+p276
+sg89
+g260
+sasS'pyver'
+p277
+S'Python 2.7.8: /usr/bin/python (prefix: /usr)'
+p278
+sS'session'
+p279
+g61
+(S's\xe5\x08\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">auth</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">expiration</td><td style="vertical-align:top;">:</td><td><div>3600</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">hmac_key</td><td style="vertical-align:top;">:</td><td><div>d1c1e134-cfb9-4afd-9c32-cb990bfd4e37</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">last_visit</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2015, 5, 2, 4, 0, 50, 996385)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remember_me</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">user</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">email</td><td style="vertical-align:top;">:</td><td><div>kk@gmail.com</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">first_name</td><td style="vertical-align:top;">:</td><td><div>Kushagra</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">id</td><td style="vertical-align:top;">:</td><td><div>2L</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">last_name</td><td style="vertical-align:top;">:</td><td><div>Chandak</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">registration_id</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">registration_key</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">reset_password_key</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">user_groups</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">2</td><td style="vertical-align:top;">:</td><td><div>user_2</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">flash</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr></table></div>'
+tRp280
+sS'etype'
+p281
+S"<class 'sqlite3.OperationalError'>"
+p282
+sS'date'
+p283
+S'Sat May  2 04:00:51 2015'
+p284
+sS'response'
+p285
+g61
+(S's\xf6\x1d\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">body</td><td style="vertical-align:top;">:</td><td><div>&lt;cStringIO.StringO object at 0x7fcc300644c8&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cookies</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">session_id_aarogya</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-ac4dc907-8098-4f0d-947b-05fcac0b5ffa<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">delimiters</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>{{</div></td></tr><tr><td><div>}}</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">files</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">flash</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">form_label_separator</td><td style="vertical-align:top;">:</td><td><div>: </div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">formstyle</td><td style="vertical-align:top;">:</td><td><div>table3cols</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">generic_patterns</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>*</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">google_analytics_id</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">headers</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">X-Powered-By</td><td style="vertical-align:top;">:</td><td><div>web2py</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">logo</td><td style="vertical-align:top;">:</td><td><div><a class="brand" href="http://www.iiit.ac.in/"><b>IIIT-H</b></a></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">menu</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div><table><tr><td><div>Home</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/AAROGYA/default/index</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Staff</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.google.com</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Book Appointment</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/AAROGYA/default/Registration_Form</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Show Appointments</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/AAROGYA/default/Appointments_Booked</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">meta</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">author</td><td style="vertical-align:top;">:</td><td><div>Your Name &lt;you@example.com&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">generator</td><td style="vertical-align:top;">:</td><td><div>Web2py Web Framework</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">keywords</td><td style="vertical-align:top;">:</td><td><div>web2py, python, framework</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">models_to_run</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>^\\w+\\.py$</div></td></tr><tr><td><div>^default/\\w+\\.py$</div></td></tr><tr><td><div>^default/Registration_Form/\\w+\\.py$</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">postprocessing</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_client</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_compression_level</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_expires</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_key</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_data_name</td><td style="vertical-align:top;">:</td><td><div>session_data_aarogya</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_file</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;/home/kushagra/Downloads/web2py/applications/AAROGYA/sessions/0aa/1e5/127.0.0.1-ac4dc907-8098-4f0d-947b-05fcac0b5ffa&#x27;, mode &#x27;rb+&#x27; at 0x7fcc11fdc0c0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_filename</td><td style="vertical-align:top;">:</td><td><div>/home/kushagra/Downloads/web2py/applications/AAROGYA/sessions/127.0.0.1-ac4dc907-8098-4f0d-947b-05fcac0b5ffa</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_hash</td><td style="vertical-align:top;">:</td><td><div>f213bf575d098c4730c3e419d840cbf4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-ac4dc907-8098-4f0d-947b-05fcac0b5ffa</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_name</td><td style="vertical-align:top;">:</td><td><div>session_id_aarogya</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_locked</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_masterapp</td><td style="vertical-align:top;">:</td><td><div>AAROGYA</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_new</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_storage_type</td><td style="vertical-align:top;">:</td><td><div>file</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">status</td><td style="vertical-align:top;">:</td><td><div>200</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">view</td><td style="vertical-align:top;">:</td><td><div>default/Registration_Form.html</div></td></tr></table></div>'
+tRp286
+sS'locals'
+p287
+(dp288
+S'fields'
+p289
+S"[(<gluon.dal.objects.Field object>, datetime.time(4, 0, 46)), (<gluon.dal.objects.Field object>, 'abc'), (<gluon.dal.objects.Field object>, datetime.date(2015, 5, 2)), (<gluon.dal.objects.Field object>, 'Runny Nose'), (<gluon.dal.objects.Field object>, '999999999'), (<gluon.dal.objects.Field object>, 'abc@gmail.com'), (<gluon.dal.objects.Field object>, 'Cough')]"
+p290
+sS'self'
+p291
+S'<gluon.dal.adapters.sqlite.SQLiteAdapter object>'
+p292
+sS'e'
+S'OperationalError(\'near "Time": syntax error\',)'
+p293
+sS'table'
+p294
+S'<Table Patients (id,Name,Phone,Ailment,Symptoms,Email,RegDate,Appointment Time)>'
+p295
+sS'query'
+p296
+S'"INSERT INTO Patients(Appointment Time,Name,RegDa...Runny Nose\',\'999999999\',\'abc@gmail.com\',\'Cough\');"'
+p297
+sssS'traceback'
+p298
+S'Traceback (most recent call last):\n  File "/home/kushagra/Downloads/web2py/gluon/restricted.py", line 224, in restricted\n    exec ccode in environment\n  File "/home/kushagra/Downloads/web2py/applications/AAROGYA/controllers/default.py", line 117, in <module>\n  File "/home/kushagra/Downloads/web2py/gluon/globals.py", line 393, in <lambda>\n    self._caller = lambda f: f()\n  File "/home/kushagra/Downloads/web2py/gluon/tools.py", line 3444, in f\n    return action(*a, **b)\n  File "/home/kushagra/Downloads/web2py/applications/AAROGYA/controllers/default.py", line 19, in Registration_Form\n    form=SQLFORM(db.Patients).process()\n  File "/home/kushagra/Downloads/web2py/gluon/html.py", line 2303, in process\n    self.validate(**kwargs)\n  File "/home/kushagra/Downloads/web2py/gluon/html.py", line 2240, in validate\n    if self.accepts(**kwargs):\n  File "/home/kushagra/Downloads/web2py/gluon/sqlhtml.py", line 1677, in accepts\n    self.vars.id = self.table.insert(**fields)\n  File "/home/kushagra/Downloads/web2py/gluon/dal/objects.py", line 724, in insert\n    ret =  self._db._adapter.insert(self, self._listify(fields))\n  File "/home/kushagra/Downloads/web2py/gluon/dal/adapters/base.py", line 715, in insert\n    raise e\nOperationalError: near "Time": syntax error\n'
+p299
+s.

@@ -1,0 +1,18 @@
+{{extend 'layout.html'}}
+<h1><b><i>Registration Form</i></b></h1>
+<style>
+    body{
+        background-image:url("http://www.mcohs.umn.edu/assets/images/clipboard.jpg");
+        background-repeat: no-repeat;
+        background-size:100% 100%;
+    }
+        h1{
+        text-transform:capitalize;
+        text-shadow:4px 4px #C4CCC8;
+        text-align:center;
+        font-size:45px;
+            color:black;
+        font-family:"Times New Roman";
+    }
+</style>
+{{=BEAUTIFY(form)}}

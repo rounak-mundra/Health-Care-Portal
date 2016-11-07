@@ -1,0 +1,12 @@
+{{extend 'layout.html'}}
+<h1>
+    Medicines Available
+</h1>
+<style>
+        body{
+        background-image:url("http://d2esipn4y2tzb0.cloudfront.net/assets/images/506470fecf5e1dfe2300002f/original.jpg");
+        background-repeat: no-repeat;
+        background-size:100% 150%;
+    }
+</style>
+{{=BEAUTIFY(med)}}

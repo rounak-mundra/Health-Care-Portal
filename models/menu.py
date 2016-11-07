@@ -1,0 +1,37 @@
+response.logo = A(B('IIIT-H'),
+                  _class="brand",_href="http://www.iiit.ac.in/")
+
+
+response.meta.author = 'Your Name <you@example.com>'
+response.meta.keywords = 'web2py, python, framework'
+response.meta.generator = 'Web2py Web Framework'
+response.google_analytics_id = None
+response.menu = [
+(T('Home'), False, URL('default', 'index')),
+(T('Staff'),False,URL('Display1')),
+(T('Book Appointment'),False,URL('Registration_Form')),
+(T('Show Appointments'),False,URL('Appointments_Booked')),
+(T('General Info.'),False,URL('Equipments')),
+(T('Medicines Available'),False,URL('Medicines1')),
+(T('Search'),False,URL('Search'))
+]
+if auth.has_membership('doctors'):
+    response.menu = [
+    (T('Home'), False, URL('default', 'index')),
+    (T('Staff'),False,URL('Display')),
+    (T('Send_Email'),'False',URL('Sending_Email')),
+    (T('Book Appointment'),False,URL('Registration_Form')),
+    (T('Show Appointments'),False,URL('Appointments_Booked')),
+    (T('Medicines Available'),False,URL('Medicines')),
+    (T('Manage Appointments'),False,URL('Manager')),
+    (T('Search'),False,URL('Search'))
+    ]
+
+DEVELOPMENT_MENU = True
+
+#########################################################################
+## provide shortcuts for development. remove in production
+#########################################################################
+
+
+if "auth" in locals(): auth.wikimenu()

@@ -1,0 +1,55 @@
+{{extend 'layout.html'}}
+<h1>
+    AAROGYA HEALTH CENTRE
+</h1>
+<style type="text/css">
+        h1{
+        text-transform:capitalize;
+        text-shadow:4px 4px #C4CCC8;
+        text-align:center;
+        font-size:45px;
+            color:black;
+        font-family:"Times New Roman";
+    }
+    h2{
+        text-transform:capitalize;
+        text-align:center;
+        font-size:40px;
+        font-family:"Times New Roman";
+    }
+    	.pic{
+            width:1000;
+            height:600px;
+            background: url(http://forum.iiit.ac.in/2015/wp-content/themes/twentyten/images/headers/path.jpg) no-repeat;
+            background-size : 105% 50%
+        }
+    .text{
+         width:500;
+        height:500px;
+        background:#FFF;
+        opacity:0;
+        text-align:center;
+    }
+    .pic:hover .text {
+        opacity:0.6;
+        text-align:justify;
+        color:#000000;
+        font-size:20px;
+        font-weight:700;
+        font-family:"Times New Roman",
+            Times, serif;
+        padding:60px;
+    }
+</style>
+<body >
+<div class="pic">
+        <div class="text">
+                <h2>
+                 He who has health,<br>
+                    has hope<br>
+               and he who has hope,<br>
+                 has everthing
+            </h2>
+        </div>
+</div>
+</body>

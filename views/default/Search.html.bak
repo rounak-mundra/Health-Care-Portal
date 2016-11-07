@@ -1,0 +1,11 @@
+{{extend 'layout.html'}}
+<style>
+        body{
+        background-image:url("");
+        background-repeat: no-repeat;
+        background-size:100% 150%;
+    }
+</style>
+{{=form}}
+<br/>
+{{=target_div}}

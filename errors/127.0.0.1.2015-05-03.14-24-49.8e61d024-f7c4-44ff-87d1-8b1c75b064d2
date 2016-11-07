@@ -1,0 +1,681 @@
+(dp1
+S'output'
+p2
+S"<class 'sqlite3.IntegrityError'> FOREIGN KEY constraint failed"
+p3
+sS'layer'
+p4
+S'/home/rounak/Desktop/web2py/applications/AAROGYA1/controllers/default.py'
+p5
+sS'code'
+p6
+S'from gluon.tools import Mail\nmail = Mail()\nmail.settings.server = \'research.iiit.ac.in:25\'\nmail.settings.sender = \'docters@research.iiit.ac.in\'\ndef index():\n    response.flash=T(\'WELCOME TO IIIT-H HEALTH CENTRE\')\n    x=\'AAROGYA\'\n    return locals()\n\n@auth.requires_login()\ndef Registration_Form():\n    form=SQLFORM(db.Patients).process()\n    if form.accepted:\n        response.flash=\'Form Accepted\'\n    elif form.errors:\n        response.flash=\'Form has errors\'\n    else:\n        response.flash=\'Please fill out the form\'\n    return dict(form=form)\n\ndef Search():\n    return dict(form=FORM(INPUT(_id=\'keyword\',_name=\'keyword\',\n    _onkeyup="ajax(\'callback\', [\'keyword\'], \'target\');")),\n    target_div=DIV(_id=\'target\'))\n\ndef callback():\n    query = db.Patients.Name.contains(request.vars.keyword)\n    pages = db(query).select(orderby=db.Patients.Name)\n    links = [A(p.Name, _href=URL(\'Show\',args=p.id)) for p in pages]\n    return UL(*links)\n\ndef Show():\n    return locals()\n@auth.requires_login()\ndef Equipments():\n    response.flash="Welcome to Injection page :) :)"\n    return locals()\n@auth.requires_login()\ndef Appointments_Booked():\n    rows=db().select(db.Patients.ALL)\n    return locals()\n@auth.requires_membership(\'docters\')\ndef Sending_Email():\n    rows=db(db.Patients.id>0).select()\n    for row in rows:\n        x=row.Email\n        mail.send(to=[x],\n                  subject=\'Appointment_Time\',\n                   message=\'hello\')\n@auth.requires_membership(\'doctors\')\ndef Manager():\n    grid= SQLFORM.grid(db.Patients)\n    return locals()\n#@auth.requires_login()\n#def Email_sending():\n#    response.flash=\'email sending\'\n#    rows=db(db.Patients.id>0).select()\n#    for row in rows:\n#            db.queue.insert(status=\'pending\',\n#                            email=row.Email,\n#                            subject=\'Appointment Time\',\n#                            msg=\'i m sorry\')\n#   while True:\n #       rows=db(db.queue.status==\'pending\').select()\n    #for row in rows:\n#            if mail.send(to=row.email,\n #                        subject=row.subject,\n#                         message=row.msg):\n #               row.update_record(status=\'sent\')\n           # else:\n            #    row.update_record(status=\'failed\')\n            #db.commit()\n\n@auth.requires_login()\ndef edit_task():\n    task_id=request.args(0)\n    task=db.task[task_id] or redirect(error_page)\n    person=db.person[task.person]\n    db.task.person.writable=db.task.person.readable=False\n    form=crud.update(db.task,task,next=\'view_task/[id]\')\n    return dict(form=form, person=person)\n\n@auth.requires_login()\ndef view_task():\n    task_id=request.args(0)\n    task=db.task[task_id] or redirect(error_page)\n    person=db.person[task.person]\n    db.task.person.writable=db.task.person.readable=False\n    form=crud.read(db.task,task)\n    return dict(form=form, person=person, task=task)\n\n@auth.requires_login()\ndef list_tasks():\n    person_id=request.args(0)\n    person=db.person[person_id]\n    if person_id:\n       tasks=db(db.task.person==person_id)\\\n               (db.task.created_by==auth.user.id)\\\n               (db.task.start_time>=request.now).select()\n    else:\n       tasks=db(db.task.created_by==auth.user.id)\\\n               (db.task.start_time<=request.now).select()\n    db.task.person.default=person_id\n    db.task.person.writable=db.task.person.readable=False\n    form=crud.create(db.task,next=\'view_task/[id]\')\n    return dict(tasks=tasks,person=person,form=form)\n\ndef user():\n    """\n    exposes:\n    http://..../[app]/default/user/login\n    http://..../[app]/default/user/logout\n    http://..../[app]/default/user/register\n    http://..../[app]/default/user/profile\n    http://..../[app]/default/user/retrieve_password\n    http://..../[app]/default/user/change_password\n    http://..../[app]/default/user/manage_users (requires membership in\n    use @auth.requires_login()\n        @auth.requires_membership(\'group name\')\n        @auth.requires_permission(\'read\',\'table name\',record_id)\n    to decorate functions that need access control\n    """\n    return dict(form=auth())\n\n\n@cache.action()\ndef download():\n    """\n    allows downloading of uploaded files\n    http://..../[app]/default/download/[filename]\n    """\n    return response.download(request, db)\n\n\ndef call():\n    """\n    exposes services. for example:\n    http://..../[app]/default/call/jsonrpc\n    decorate with @services.jsonrpc the functions to expose\n    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv\n    """\n    return service()\n\n\n@auth.requires_login() \ndef api():\n    """\n    this is example of API with access control\n    WEB2PY provides Hypermedia API (Collection+JSON) Experimental\n    """\n    from gluon.contrib.hypermedia import Collection\n    rules = {\n        \'<tablename>\': {\'GET\':{},\'POST\':{},\'PUT\':{},\'DELETE\':{}},\n        }\n    return Collection(db).process(request,response,rules)\n\nresponse._vars=response._caller(user)\n'
+p7
+sS'snapshot'
+p8
+(dp9
+S'exception'
+p10
+(dp11
+S'__module__'
+p12
+S"'sqlite3'"
+p13
+sS'__getslice__'
+p14
+S"<method-wrapper '__getslice__' of IntegrityError object>"
+p15
+sS'__str__'
+p16
+S"<method-wrapper '__str__' of IntegrityError object>"
+p17
+sS'__reduce__'
+p18
+S'<built-in method __reduce__ of IntegrityError object>'
+p19
+sS'__dict__'
+p20
+S'{}'
+p21
+sS'__sizeof__'
+p22
+S'<built-in method __sizeof__ of IntegrityError object>'
+p23
+sS'__weakref__'
+p24
+S'None'
+p25
+sS'__init__'
+p26
+S"<method-wrapper '__init__' of IntegrityError object>"
+p27
+sS'__setattr__'
+p28
+S"<method-wrapper '__setattr__' of IntegrityError object>"
+p29
+sS'__reduce_ex__'
+p30
+S'<built-in method __reduce_ex__ of IntegrityError object>'
+p31
+sS'__new__'
+p32
+S'<built-in method __new__ of type object>'
+p33
+sS'__format__'
+p34
+S'<built-in method __format__ of IntegrityError object>'
+p35
+sS'__class__'
+p36
+S"<class 'sqlite3.IntegrityError'>"
+p37
+sS'__doc__'
+p38
+S'None'
+p39
+sS'__getitem__'
+p40
+S"<method-wrapper '__getitem__' of IntegrityError object>"
+p41
+sS'__setstate__'
+p42
+S'<built-in method __setstate__ of IntegrityError object>'
+p43
+sS'__getattribute__'
+p44
+S"<method-wrapper '__getattribute__' of IntegrityError object>"
+p45
+sS'args'
+p46
+S"('FOREIGN KEY constraint failed',)"
+p47
+sS'__subclasshook__'
+p48
+S'<built-in method __subclasshook__ of type object>'
+p49
+sS'__unicode__'
+p50
+S'<built-in method __unicode__ of IntegrityError object>'
+p51
+sS'__delattr__'
+p52
+S"<method-wrapper '__delattr__' of IntegrityError object>"
+p53
+sS'__repr__'
+p54
+S"<method-wrapper '__repr__' of IntegrityError object>"
+p55
+sS'__hash__'
+p56
+S"<method-wrapper '__hash__' of IntegrityError object>"
+p57
+ssS'evalue'
+p58
+S'FOREIGN KEY constraint failed'
+p59
+sS'request'
+p60
+cgluon.html
+XML_unpickle
+p61
+(S's\x98a\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">ajax</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">application</td><td style="vertical-align:top;">:</td><td><div>AAROGYA1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">args</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>logout</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cid</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">client</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">controller</td><td style="vertical-align:top;">:</td><td><div>default</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cookies</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">session_id_aarogya</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-e80ea0cc-ebfc-4804-a7a3-c829f5252797<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_aarogya1</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-f5a442a0-d768-49f4-9166-6a7443aa53e5<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_admin</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-adf34d5b-c459-4d98-91fd-7d37dada7a69<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_welcome</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-81d6fd26-73f4-43b1-ad82-c14859ba9974<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">env</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT</td><td style="vertical-align:top;">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT_ENCODING</td><td style="vertical-align:top;">:</td><td><div>gzip, deflate</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT_LANGUAGE</td><td style="vertical-align:top;">:</td><td><div>en-US,en;q=0.5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CONNECTION</td><td style="vertical-align:top;">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_COOKIE</td><td style="vertical-align:top;">:</td><td><div>session_id_welcome=127.0.0.1-81d6fd26-73f4-43b1-ad82-c14859ba9974; session_id_admin=127.0.0.1-adf34d5b-c459-4d98-91fd-7d37dada7a69; session_id_aarogya1=127.0.0.1-f5a442a0-d768-49f4-9166-6a7443aa53e5; session_id_aarogya=127.0.0.1-e80ea0cc-ebfc-4804-a7a3-c829f5252797</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_HOST</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_REFERER</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000/AAROGYA1/appadmin/insert/db/auth_user</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_USER_AGENT</td><td style="vertical-align:top;">:</td><td><div>Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:36.0) Gecko/20100101 Firefox/36.0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">PATH_INFO</td><td style="vertical-align:top;">:</td><td><div>/AAROGYA1/default/user/logout</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">QUERY_STRING</td><td style="vertical-align:top;">:</td><td><div>_next=/AAROGYA1/default/index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REMOTE_ADDR</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REMOTE_PORT</td><td style="vertical-align:top;">:</td><td><div>36966</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REQUEST_METHOD</td><td style="vertical-align:top;">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SCRIPT_NAME</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_NAME</td><td style="vertical-align:top;">:</td><td><div>rounak</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_PORT</td><td style="vertical-align:top;">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_PROTOCOL</td><td style="vertical-align:top;">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_SOFTWARE</td><td style="vertical-align:top;">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">app_folders</td><td style="vertical-align:top;">:</td><td><div>set([&#x27;/home/rounak/Desktop/web2py/applications/admin/&#x27;, &#x27;/home/rounak/Desktop/web2py/applications/welcome/&#x27;, &#x27;/home/rounak/Desktop/web2py/applications/AAROGYA1/&#x27;, &#x27;/home/rounak/Desktop/web2py/applications/AAROGYA/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">applications_parent</td><td style="vertical-align:top;">:</td><td><div>/home/rounak/Desktop/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_options</td><td style="vertical-align:top;">:</td><td><div>&lt;Values at 0xb634424c: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;with_scheduler&#x27;: False, &#x27;ips&#x27;: [&#x27;127.0.1.1&#x27;], &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;scheduler_groups&#x27;: None, &#x27;port&#x27;: 8000, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;rounak&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: False, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;print_errors&#x27;: False, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/home/rounak/Desktop/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;profiler_dir&#x27;: None, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;interfaces&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;gae&#x27;: None, &#x27;password&#x27;: &#x27;&lt;ask&gt;&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">db_sessions</td><td style="vertical-align:top;">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">debugging</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">gluon_parent</td><td style="vertical-align:top;">:</td><td><div>/home/rounak/Desktop/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept</td><td style="vertical-align:top;">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept_encoding</td><td style="vertical-align:top;">:</td><td><div>gzip, deflate</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept_language</td><td style="vertical-align:top;">:</td><td><div>en-US,en;q=0.5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_connection</td><td style="vertical-align:top;">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_cookie</td><td style="vertical-align:top;">:</td><td><div>session_id_welcome=127.0.0.1-81d6fd26-73f4-43b1-ad82-c14859ba9974; session_id_admin=127.0.0.1-adf34d5b-c459-4d98-91fd-7d37dada7a69; session_id_aarogya1=127.0.0.1-f5a442a0-d768-49f4-9166-6a7443aa53e5; session_id_aarogya=127.0.0.1-e80ea0cc-ebfc-4804-a7a3-c829f5252797</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_host</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_referer</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000/AAROGYA1/appadmin/insert/db/auth_user</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_user_agent</td><td style="vertical-align:top;">:</td><td><div>Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:36.0) Gecko/20100101 Firefox/36.0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_jython</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_pypy</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_source</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">local_hosts</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>rounak</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path_info</td><td style="vertical-align:top;">:</td><td><div>/AAROGYA1/default/user/logout</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">query_string</td><td style="vertical-align:top;">:</td><td><div>_next=/AAROGYA1/default/index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remote_addr</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remote_port</td><td style="vertical-align:top;">:</td><td><div>36966</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">request_method</td><td style="vertical-align:top;">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">request_uri</td><td style="vertical-align:top;">:</td><td><div>/AAROGYA1/default/user/logout?_next=/AAROGYA1/default/index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">script_name</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_name</td><td style="vertical-align:top;">:</td><td><div>rounak</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_port</td><td style="vertical-align:top;">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_protocol</td><td style="vertical-align:top;">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_software</td><td style="vertical-align:top;">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_path</td><td style="vertical-align:top;">:</td><td><div>/home/rounak/Desktop/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_version</td><td style="vertical-align:top;">:</td><td><div>2.10.3-stable+timestamp.2015.04.02.21.42.07</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.errors</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0xb751f0d0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.file_wrapper</td><td style="vertical-align:top;">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0xb630186c&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.input</td><td style="vertical-align:top;">:</td><td><div>&lt;socket._fileobject object at 0xad987c6c&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.multiprocess</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.multithread</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.run_once</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.url_scheme</td><td style="vertical-align:top;">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.version</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_errors</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0xb751f0d0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_file_wrapper</td><td style="vertical-align:top;">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0xb630186c&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_input</td><td style="vertical-align:top;">:</td><td><div>&lt;socket._fileobject object at 0xad987c6c&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_multiprocess</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_multithread</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_run_once</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_url_scheme</td><td style="vertical-align:top;">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_version</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">extension</td><td style="vertical-align:top;">:</td><td><div>html</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">folder</td><td style="vertical-align:top;">:</td><td><div>/home/rounak/Desktop/web2py/applications/AAROGYA1/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">function</td><td style="vertical-align:top;">:</td><td><div>user</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">global_settings</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">app_folders</td><td style="vertical-align:top;">:</td><td><div>set([&#x27;/home/rounak/Desktop/web2py/applications/admin/&#x27;, &#x27;/home/rounak/Desktop/web2py/applications/welcome/&#x27;, &#x27;/home/rounak/Desktop/web2py/applications/AAROGYA1/&#x27;, &#x27;/home/rounak/Desktop/web2py/applications/AAROGYA/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">applications_parent</td><td style="vertical-align:top;">:</td><td><div>/home/rounak/Desktop/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_options</td><td style="vertical-align:top;">:</td><td><div>&lt;Values at 0xb634424c: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;with_scheduler&#x27;: False, &#x27;ips&#x27;: [&#x27;127.0.1.1&#x27;], &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;scheduler_groups&#x27;: None, &#x27;port&#x27;: 8000, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;rounak&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: False, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;print_errors&#x27;: False, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/home/rounak/Desktop/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;profiler_dir&#x27;: None, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;interfaces&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;gae&#x27;: None, &#x27;password&#x27;: &#x27;&lt;ask&gt;&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">db_sessions</td><td style="vertical-align:top;">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">debugging</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">gluon_parent</td><td style="vertical-align:top;">:</td><td><div>/home/rounak/Desktop/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_jython</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_pypy</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_source</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">local_hosts</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>rounak</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_version</td><td style="vertical-align:top;">:</td><td><div>2.10.3-stable+timestamp.2015.04.02.21.42.07</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_https</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_local</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_restful</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_sheduler</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_shell</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">now</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2015, 5, 3, 14, 24, 49, 694467)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">raw_args</td><td style="vertical-align:top;">:</td><td><div>logout</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">raw_extension</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">url</td><td style="vertical-align:top;">:</td><td><div>/AAROGYA1/default/user/logout</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">utcnow</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2015, 5, 3, 8, 54, 49, 694518)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">uuid</td><td style="vertical-align:top;">:</td><td><div>AAROGYA1/127.0.0.1.2015-05-03.14-24-49.8e61d024-f7c4-44ff-87d1-8b1c75b064d2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi</td><td style="vertical-align:top;">:</td><td><div>&lt;gluon.main.LazyWSGI object at 0xad5ca22c&gt;</div></td></tr></table></div>'
+tRp62
+sS'frames'
+p63
+(lp64
+(dp65
+S'file'
+p66
+S'/home/rounak/Desktop/web2py/gluon/restricted.py'
+p67
+sS'dump'
+p68
+(dp69
+S'environment'
+p70
+S"{'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'ASSIGNJS': <function ASSIGNJS>, 'Appointments_Booked': <function Appointments_Booked>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, ...}"
+p71
+sS'ccode'
+p72
+S'<code object <module> at 0xad9b3380, file "/home...cations/AAROGYA1/controllers/default.py", line 1>'
+p73
+ssS'lnum'
+p74
+I227
+sS'lines'
+p75
+(dp76
+I224
+S'            ccode = code'
+p77
+sI225
+S'        else:'
+p78
+sI226
+S'            ccode = compile2(code, layer)'
+p79
+sI227
+S'        exec ccode in environment'
+p80
+sI228
+S'    except HTTP:'
+p81
+sI229
+S'        raise'
+p82
+sI230
+S'    except RestrictedError:'
+p83
+sI231
+S'        # do not encapsulate (obfuscate) the original RestrictedError'
+p84
+sI222
+S'    try:'
+p85
+sI223
+S'        if isinstance(code, types.CodeType):'
+p86
+ssS'call'
+p87
+S"(code='from gluon.tools import Mail\\nmail = Mail()\\nmail....se,rules)\\n\\nresponse._vars=response._caller(user)\\n', environment={'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'ASSIGNJS': <function ASSIGNJS>, 'Appointments_Booked': <function Appointments_Booked>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, ...}, layer='/home/rounak/Desktop/web2py/applications/AAROGYA1/controllers/default.py')"
+p88
+sS'func'
+p89
+S'restricted'
+p90
+sa(dp91
+g66
+S'/home/rounak/Desktop/web2py/applications/AAROGYA1/controllers/default.py'
+p92
+sg68
+(dp93
+sg74
+I157
+sg75
+(dp94
+I146
+S'def api():'
+p95
+sI147
+S'    """'
+p96
+sI148
+S'    this is example of API with access control'
+p97
+sI149
+S'    WEB2PY provides Hypermedia API (Collection+JSON) Experimental'
+p98
+sI150
+S'    """'
+p99
+sI151
+S'    from gluon.contrib.hypermedia import Collection'
+p100
+sI152
+S'    rules = {'
+p101
+sI153
+S"        '<tablename>': {'GET':{},'POST':{},'PUT':{},'DELETE':{}},"
+p102
+sI154
+S'        }'
+p103
+sI155
+S'    return Collection(db).process(request,response,rules)'
+p104
+ssg87
+S'()'
+p105
+sg89
+S'<module>'
+p106
+sa(dp107
+g66
+S'/home/rounak/Desktop/web2py/gluon/globals.py'
+p108
+sg68
+(dp109
+S'self'
+p110
+S'undefined'
+p111
+sS'f'
+S'<function user>'
+p112
+ssg74
+I393
+sg75
+(dp113
+I388
+S"        self.flash = ''            # used by the default view layout"
+p114
+sI389
+S'        self.meta = Storage()      # used by web2py_ajax.html'
+p115
+sI390
+S'        self.menu = []             # used by the default view layout'
+p116
+sI391
+S'        self.files = []            # used by web2py_ajax.html'
+p117
+sI392
+S'        self._vars = None'
+p118
+sI393
+S'        self._caller = lambda f: f()'
+p119
+sI394
+S'        self._view_environment = None'
+p120
+sI395
+S'        self._custom_commit = None'
+p121
+sI396
+S'        self._custom_rollback = None'
+p122
+sI397
+S"        self.generic_patterns = ['*']"
+p123
+ssg87
+S'(f=<function user>)'
+p124
+sg89
+S'<lambda>'
+p125
+sa(dp126
+g66
+S'/home/rounak/Desktop/web2py/applications/AAROGYA1/controllers/default.py'
+p127
+sg68
+(dp128
+S'global auth'
+p129
+S'<gluon.tools.Auth object>'
+p130
+sS'form'
+p131
+g111
+sS'builtindict'
+p132
+S"<type 'dict'>"
+p133
+ssg74
+I123
+sg75
+(dp134
+I118
+S'    use @auth.requires_login()'
+p135
+sI119
+S"        @auth.requires_membership('group name')"
+p136
+sI120
+S"        @auth.requires_permission('read','table name',record_id)"
+p137
+sI121
+S'    to decorate functions that need access control'
+p138
+sI122
+S'    """'
+p139
+sI123
+S'    return dict(form=auth())'
+p140
+sI124
+S''
+sI125
+S''
+sI126
+S'@cache.action()'
+p141
+sI127
+S'def download():'
+p142
+ssg87
+S'()'
+p143
+sg89
+S'user'
+p144
+sa(dp145
+g66
+S'/home/rounak/Desktop/web2py/gluon/tools.py'
+p146
+sg68
+(dp147
+S'self'
+p148
+S'<gluon.tools.Auth object>'
+p149
+sS'args'
+p150
+S"['logout']"
+p151
+sS'builtingetattr'
+p152
+S'<built-in function getattr>'
+p153
+ssg74
+I1451
+sg75
+(dp154
+I1446
+S"                       'change_password', 'profile', 'groups',"
+p155
+sI1447
+S"                       'impersonate', 'not_authorized'):"
+p156
+sI1448
+S"            if len(request.args) >= 2 and args[0] == 'impersonate':"
+p157
+sI1449
+S'                return getattr(self, args[0])(request.args[1])'
+p158
+sI1450
+S'            else:'
+p159
+sI1451
+S'                return getattr(self, args[0])()'
+p160
+sI1452
+S"        elif args[0] == 'cas' and not self.settings.cas_provider:"
+p161
+sI1453
+S"            if args(1) == self.settings.cas_actions['login']:"
+p162
+sI1454
+S'                return self.cas_login(version=2)'
+p163
+sI1455
+S"            elif args(1) == self.settings.cas_actions['validate']:"
+p164
+ssg87
+S'(self=<gluon.tools.Auth object>)'
+p165
+sg89
+S'__call__'
+p166
+sa(dp167
+g66
+S'/home/rounak/Desktop/web2py/gluon/tools.py'
+p168
+sg68
+(dp169
+S'self'
+p170
+S'<gluon.tools.Auth object>'
+p171
+sS'self.user'
+p172
+S"<Row {'first_name': 'Doctor', 'last_name': 'IIIT...word_key': '', 'registration_key': '', 'id': 8L}>"
+p173
+sS'self.log_event'
+p174
+S'<bound method Auth.log_event of <gluon.tools.Auth object>>'
+p175
+sS'log'
+p176
+S"'User %(id)s Logged-out'"
+p177
+ssg74
+I2655
+sg75
+(dp178
+I2656
+S'        if self.settings.login_form != self:'
+p179
+sI2657
+S'            cas = self.settings.login_form'
+p180
+sI2658
+S'            cas_user = cas.get_user()'
+p181
+sI2659
+S'            if cas_user:'
+p182
+sI2650
+S'        if onlogout:'
+p183
+sI2651
+S'            onlogout(self.user)'
+p184
+sI2652
+S'        if log is DEFAULT:'
+p185
+sI2653
+S"            log = self.messages['logout_log']"
+p186
+sI2654
+S'        if self.user:'
+p187
+sI2655
+S'            self.log_event(log, self.user)'
+p188
+ssg87
+S"(self=<gluon.tools.Auth object>, next='/AAROGYA1/default/index', onlogout=None, log='User %(id)s Logged-out')"
+p189
+sg89
+S'logout'
+p190
+sa(dp191
+g66
+S'/home/rounak/Desktop/web2py/gluon/tools.py'
+p192
+sg68
+(dp193
+S'origin'
+p194
+S"'auth'"
+p195
+sS'user_id'
+p196
+S'8L'
+p197
+ssg74
+I2036
+sg75
+(dp198
+I2031
+S'        # log messages should not be translated'
+p199
+sI2032
+S"        if type(description).__name__ == 'lazyT':"
+p200
+sI2033
+S'            description = description.m'
+p201
+sI2034
+S'        self.table_event().insert('
+p202
+sI2035
+S'            description=str(description % vars),'
+p203
+sI2036
+S'            origin=origin, user_id=user_id)'
+p204
+sI2037
+S''
+sI2038
+S"    def get_or_create_user(self, keys, update_fields=['email'],"
+p205
+sI2039
+S'                           login=True, get=True):'
+p206
+sI2040
+S'        """'
+p207
+ssg87
+S"(self=<gluon.tools.Auth object>, description='User %(id)s Logged-out', vars=<Row {'first_name': 'Doctor', 'last_name': 'IIIT...word_key': '', 'registration_key': '', 'id': 8L}>, origin='auth')"
+p208
+sg89
+S'log_event'
+p209
+sa(dp210
+g66
+S'/home/rounak/Desktop/web2py/gluon/packages/dal/pydal/objects.py'
+p211
+sg68
+(dp212
+S'self._listify'
+p213
+S'<bound method Table._listify of <Table auth_even...ime_stamp,client_ip,user_id,origin,description)>>'
+p214
+sS'fields'
+p215
+S"{'client_ip': '127.0.0.1', 'description': 'User 8 Logged-out', 'origin': 'auth', 'time_stamp': datetime.datetime(2015, 5, 3, 14, 24, 49, 694467), 'user_id': 8L}"
+p216
+sS'self'
+p217
+S'<Table auth_event (id,time_stamp,client_ip,user_id,origin,description)>'
+p218
+sS'ret'
+p219
+g111
+sS'self._db._adapter'
+p220
+S'<pydal.adapters.sqlite.SQLiteAdapter object>'
+p221
+sS'self._db._adapter.insert'
+p222
+S'<bound method SQLiteAdapter.insert of <pydal.adapters.sqlite.SQLiteAdapter object>>'
+p223
+sS'self._db'
+p224
+S'<DAL uri="sqlite://storage.sqlite">'
+p225
+ssg74
+I745
+sg75
+(dp226
+I740
+S''
+sI741
+S'    def insert(self, **fields):'
+p227
+sI742
+S'        fields = self._defaults(fields)'
+p228
+sI743
+S'        self._attempt_upload(fields)'
+p229
+sI744
+S'        if any(f(fields) for f in self._before_insert): return 0'
+p230
+sI745
+S'        ret =  self._db._adapter.insert(self, self._listify(fields))'
+p231
+sI746
+S'        if ret and self._after_insert:'
+p232
+sI747
+S'            fields = Row(fields)'
+p233
+sI748
+S'            [f(fields,ret) for f in self._after_insert]'
+p234
+sI749
+S'        return ret'
+p235
+ssg87
+S"(self=<Table auth_event (id,time_stamp,client_ip,user_id,origin,description)>, **fields={'client_ip': '127.0.0.1', 'description': 'User 8 Logged-out', 'origin': 'auth', 'time_stamp': datetime.datetime(2015, 5, 3, 14, 24, 49, 694467), 'user_id': 8L})"
+p236
+sg89
+S'insert'
+p237
+sa(dp238
+g66
+S'/home/rounak/Desktop/web2py/gluon/packages/dal/pydal/adapters/base.py'
+p239
+sg68
+(dp240
+S'e'
+S"IntegrityError('FOREIGN KEY constraint failed',)"
+p241
+ssg74
+I727
+sg75
+(dp242
+I722
+S'            self.execute(query)'
+p243
+sI723
+S'        except Exception:'
+p244
+sI724
+S'            e = sys.exc_info()[1]'
+p245
+sI725
+S"            if hasattr(table,'_on_insert_error'):"
+p246
+sI726
+S'                return table._on_insert_error(table,fields,e)'
+p247
+sI727
+S'            raise e'
+p248
+sI728
+S"        if hasattr(table, '_primarykey'):"
+p249
+sI729
+S'            mydict = dict([(k[0].name, k[1]) for k in fields if k[0].name in table._primarykey])'
+p250
+sI730
+S'            if mydict != {}:'
+p251
+sI731
+S'                return mydict'
+p252
+ssg87
+S"(self=<pydal.adapters.sqlite.SQLiteAdapter object>, table=<Table auth_event (id,time_stamp,client_ip,user_id,origin,description)>, fields=[(<pydal.objects.Field object>, 'auth'), (<pydal.objects.Field object>, datetime.datetime(2015, 5, 3, 14, 24, 49, 694467)), (<pydal.objects.Field object>, '127.0.0.1'), (<pydal.objects.Field object>, 8L), (<pydal.objects.Field object>, 'User 8 Logged-out')])"
+p253
+sg89
+g237
+sasS'pyver'
+p254
+S'Python 2.7.6: /usr/bin/python (prefix: /usr)'
+p255
+sS'session'
+p256
+g61
+(S's\xd1\x0c\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">auth</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">expiration</td><td style="vertical-align:top;">:</td><td><div>3600</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">hmac_key</td><td style="vertical-align:top;">:</td><td><div>2ab0f8f5-440c-43a8-9905-b55d58aca5a2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">last_visit</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2015, 5, 3, 14, 22, 20, 941885)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remember_me</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">user</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">email</td><td style="vertical-align:top;">:</td><td><div>doctors@iiit.ac.in</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">first_name</td><td style="vertical-align:top;">:</td><td><div>Doctor</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">id</td><td style="vertical-align:top;">:</td><td><div>8L</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">last_name</td><td style="vertical-align:top;">:</td><td><div>IIIT-H</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">registration_id</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">registration_key</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">reset_password_key</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">user_groups</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">9</td><td style="vertical-align:top;">:</td><td><div>user_8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">11</td><td style="vertical-align:top;">:</td><td><div>doctor</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">auth_two_factor</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">auth_two_factor_enabled</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">auth_two_factor_tries_left</td><td style="vertical-align:top;">:</td><td><div>3</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">auth_two_factor_user</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">flash</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">last_orderby</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">last_query</td><td style="vertical-align:top;">:</td><td><div>db.auth_user.id&gt;0</div></td></tr></table></div>'
+tRp257
+sS'etype'
+p258
+S"<class 'sqlite3.IntegrityError'>"
+p259
+sS'date'
+p260
+S'Sun May  3 14:24:49 2015'
+p261
+sS'response'
+p262
+g61
+(S's)\x1f\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">body</td><td style="vertical-align:top;">:</td><td><div>&lt;cStringIO.StringO object at 0xad5cae20&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cookies</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">session_id_aarogya1</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-f5a442a0-d768-49f4-9166-6a7443aa53e5<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">delimiters</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>{{</div></td></tr><tr><td><div>}}</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">files</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">flash</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">form_label_separator</td><td style="vertical-align:top;">:</td><td><div>: </div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">formstyle</td><td style="vertical-align:top;">:</td><td><div>table3cols</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">generic_patterns</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>*</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">google_analytics_id</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">headers</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">X-Powered-By</td><td style="vertical-align:top;">:</td><td><div>web2py</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">logo</td><td style="vertical-align:top;">:</td><td><div><a class="brand" href="http://www.iiit.ac.in/"><b>IIIT-H</b></a></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">menu</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div><table><tr><td><div>Home</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/AAROGYA1/default/index</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Staff</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>http://www.google.com</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Book Appointment</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/AAROGYA1/default/Registration_Form</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Show Appointments</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/AAROGYA1/default/Appointments_Booked</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Equipments</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/AAROGYA1/default/Equipments</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Search</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/AAROGYA1/default/Search</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">meta</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">author</td><td style="vertical-align:top;">:</td><td><div>Your Name &lt;you@example.com&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">generator</td><td style="vertical-align:top;">:</td><td><div>Web2py Web Framework</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">keywords</td><td style="vertical-align:top;">:</td><td><div>web2py, python, framework</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">models_to_run</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>^\\w+\\.py$</div></td></tr><tr><td><div>^default/\\w+\\.py$</div></td></tr><tr><td><div>^default/user/\\w+\\.py$</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">postprocessing</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_client</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_compression_level</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_expires</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_key</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_data_name</td><td style="vertical-align:top;">:</td><td><div>session_data_aarogya1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_file</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;/home/rounak/Desktop/web2py/applications/AAROGYA1/sessions/149/11f/127.0.0.1-f5a442a0-d768-49f4-9166-6a7443aa53e5&#x27;, mode &#x27;rb+&#x27; at 0xadb389c0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_filename</td><td style="vertical-align:top;">:</td><td><div>/home/rounak/Desktop/web2py/applications/AAROGYA1/sessions/127.0.0.1-f5a442a0-d768-49f4-9166-6a7443aa53e5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_hash</td><td style="vertical-align:top;">:</td><td><div>d982b8f9a8d45254f10eb289f2591bdc</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-f5a442a0-d768-49f4-9166-6a7443aa53e5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_name</td><td style="vertical-align:top;">:</td><td><div>session_id_aarogya1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_locked</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_masterapp</td><td style="vertical-align:top;">:</td><td><div>AAROGYA1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_new</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_storage_type</td><td style="vertical-align:top;">:</td><td><div>file</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">status</td><td style="vertical-align:top;">:</td><td><div>200</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">view</td><td style="vertical-align:top;">:</td><td><div>default/user.html</div></td></tr></table></div>'
+tRp263
+sS'locals'
+p264
+(dp265
+S'fields'
+p266
+S"[(<pydal.objects.Field object>, 'auth'), (<pydal.objects.Field object>, datetime.datetime(2015, 5, 3, 14, 24, 49, 694467)), (<pydal.objects.Field object>, '127.0.0.1'), (<pydal.objects.Field object>, 8L), (<pydal.objects.Field object>, 'User 8 Logged-out')]"
+p267
+sS'self'
+p268
+S'<pydal.adapters.sqlite.SQLiteAdapter object>'
+p269
+sS'e'
+S"IntegrityError('FOREIGN KEY constraint failed',)"
+p270
+sS'table'
+p271
+S'<Table auth_event (id,time_stamp,client_ip,user_id,origin,description)>'
+p272
+sS'query'
+p273
+S'"INSERT INTO auth_event(origin,time_stamp,client_...-03 14:24:49\',\'127.0.0.1\',8,\'User 8 Logged-out\');"'
+p274
+sssS'traceback'
+p275
+S'Traceback (most recent call last):\n  File "/home/rounak/Desktop/web2py/gluon/restricted.py", line 227, in restricted\n    exec ccode in environment\n  File "/home/rounak/Desktop/web2py/applications/AAROGYA1/controllers/default.py", line 157, in <module>\n  File "/home/rounak/Desktop/web2py/gluon/globals.py", line 393, in <lambda>\n    self._caller = lambda f: f()\n  File "/home/rounak/Desktop/web2py/applications/AAROGYA1/controllers/default.py", line 123, in user\n    return dict(form=auth())\n  File "/home/rounak/Desktop/web2py/gluon/tools.py", line 1451, in __call__\n    return getattr(self, args[0])()\n  File "/home/rounak/Desktop/web2py/gluon/tools.py", line 2655, in logout\n    self.log_event(log, self.user)\n  File "/home/rounak/Desktop/web2py/gluon/tools.py", line 2036, in log_event\n    origin=origin, user_id=user_id)\n  File "/home/rounak/Desktop/web2py/gluon/packages/dal/pydal/objects.py", line 745, in insert\n    ret =  self._db._adapter.insert(self, self._listify(fields))\n  File "/home/rounak/Desktop/web2py/gluon/packages/dal/pydal/adapters/base.py", line 727, in insert\n    raise e\nIntegrityError: FOREIGN KEY constraint failed\n'
+p276
+s.

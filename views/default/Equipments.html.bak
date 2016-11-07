@@ -1,0 +1,64 @@
+{{extend 'layout.html'}}
+<style>
+        body{
+        background-image:url("http://www.gaiahealthblog.com/wordpress1/wp-content/uploads/2013/07/Fotolia_32919588_S.jpg");
+        background-repeat: no-repeat;
+        background-size:100% 150%;
+    }
+</style>
+<body>
+    <table border="1" cellpadding="5" cellspacing="5" width="1000" height="140">
+        <caption><b><i><h1>Medicines,Its Uses And Precautions</h1></i></b></caption>
+    <tr>
+        <th>
+            MEDICINE-NAME
+        </th>
+        <th>
+            USE
+        </th>
+        <th>
+            PRECAUTIONS
+        </th>
+    </tr>
+        <tr>
+            <td>Aspirin</td>
+            <td>Pain Relief</td>
+            <td>Do not give to children younger than 18 years due to potential for Reye's syndrome</td>
+        </tr>
+        <tr>
+            <td>Fenoprofen</td>
+            <td>Prevention of tension,headache,migrains</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Cromoglycate</td>
+            <td>Asthma Prophylaxis</td>
+            <td>Take this medicine when priscribed by your docter</td>
+        </tr>
+        <tr>
+            <td>Dextromethorphan</td>
+            <td>Cough</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Quinine</td>
+            <td>Anti Malarial</td>
+            <td>Take this medicine when priscribed by your doctor</td>
+        </tr>
+        <tr>
+            <td>Acetaminophen</td>
+            <td>Fever,Sore Throat</td>
+            <td>Make sure it won't interact with any other medications you're taking or health problems you have. If you're not sure, ask your docter or pharmacist</td>
+        </tr>
+        <tr>
+            <td>Etoposide</td>
+            <td>Anti Cancer</td>
+            <td>Take this medicine when priscribed by your docter</td>
+        </tr>
+        <tr>
+            <td>Chlorpheniramine</td>
+            <td>Sneezing,Runny Nose,Watery Eyes</td>
+            <td>Taking these medicines frequenty can dry out you eyes,nose and mouth.</td>
+        </tr>
+    </table>
+</body>

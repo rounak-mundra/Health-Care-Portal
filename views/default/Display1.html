@@ -1,0 +1,37 @@
+{{extend 'layout.html'}}
+<h1>Staff</h1>
+<style>
+            h1{
+        text-transform:capitalize;
+        text-decoration:underline;
+        text-shadow:2px 2px #FFFF00;
+        text-align:left;
+        font-size:45px;
+        font-family:"Times New Roman";
+    }
+</style>
+<body>
+    <br>
+    <table cellpadding="3" cellspacing="2" border="2">
+        <th>Name</th>
+        <th>Qualification</th>
+        <th>SpecialistIn</th>
+        <th>Photo</th>
+        {{for i in pics:}}
+        <tr align='center'>
+        <td>
+            {{=i.Name}}
+        </td>
+        <td>
+            {{=i.Qualification}}
+        </td>
+        <td>
+            {{=i.SpecialistIn}}
+        </td>
+            <td>
+                <img src="/AAROGYA1/default/download/{{=i.picture}}" width="100px" height="30px" >
+            </td>
+            </tr>
+        {{pass}}
+    </table>
+</body>
